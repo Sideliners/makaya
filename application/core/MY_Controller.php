@@ -191,32 +191,19 @@ class MY_Controller extends CI_Controller{
 		#}
 		
 		$collection_id = NULL;
-		$collection_id = $this->mod_collection->getCollectionId($type, $id);		
+		$collection_id = $this->mod_collection->getCollectionId($type, $id);
 		$carousel = $this->mod_collection->getCollectionCarousel($collection_id);
 		foreach ($carousel as $object) {
-			if ($object->article_type == "product") {
-				$image_path = $this->config->item('image_product_path');
-				$image_name = $object->product_image;
-				$url_id = $object->product_id;
-				$name = $object->product_name;
-			}
-			else if ($object->article_type == "artisan") {
-				$image_path = $this->config->item('image_artisan_path');
-				$image_name = $object->artisan_image;
-				$url_id = $object->artisan_id;
-				$name = $object->artisan_name;
-			}
-			else if ($object->article_type == "enterprise") {
-				$image_path = $this->config->item('image_enterprise_path');
-				$image_name = $object->enterprise_image;
-				$url_id = $object->enterprise_id;
-				$name = $object->enterprise_name;
-			}
-						
-			$clean_name = $this->clean_string($name);
-			$object->url = site_url("{$object->article_type}/{$url_id}/{$clean_name}");
-			$object->image = "{$image_path}{$image_name}";
-			$object->name = $name;
+            $image_path = array (
+                    "product"    => $this->config->item('image_product_path'),
+                    "artisan"    => $this->config->item('image_artisan_path'),
+                    "enterprise" => $this->config->item('image_enterprise_path')
+                );
+
+            $type = $object->article_type;
+			$clean_name = $this->clean_string($object->name);
+			$object->url = site_url("{$type}/{$object->id}/{$clean_name}");
+			$object->image = "{$image_path[$type]}{$object->image}";
 		}
 		
 		return $carousel;
@@ -250,25 +237,22 @@ class MY_Controller extends CI_Controller{
 
 		$collections = array();
 
-		if ($collection_object = $this->mod_collection->getCollectionList()) {
+		if ($collection_object = $this->mod_collection->getCollectionArticleLists()) {
+
 			foreach ( $collection_object as $collection ) {
-				$id = $collection->collection_id;
-				$name = $collection->collection_name;
+                $name = $collection->collection_name;
 
-				$articles = array();
-				if ( $collection_articles = $this->mod_article->getCollectionArticles($id) ) {
-					foreach ( $collection_articles as $article ) {
-						if ($article) {
-							$article->url_title = $this->clean_string($article->article_title);
-							array_push($articles, $article);
-						}
-					}
-				}
+				$article = array (
+                    "id"         => $collection->id,
+                    "url_title"  => $this->clean_string($collection->title),
+                    "title"      => $collection->title,
+                    "image_name" => $collection->image
+                );
 
-				$collections[$name] = $articles;
+				$collections[$name][$collection->id] = $article;
 			}
 		}
-
+        
 		return $collections;
 	}
 

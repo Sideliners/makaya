@@ -5,6 +5,7 @@ class Mod_artisan extends CI_Model{
 	private $artisan = 'artisan';
 	private $artisan_album = 'artisan_album';
 	private $collection = 'collection';
+	private $collection_artisan = 'collection_artisan';
 	private $article = 'article';
 	private $artisan_product = 'artisan_product';
 	private $product = 'product';
@@ -40,8 +41,9 @@ class Mod_artisan extends CI_Model{
 
         $this->db->select('*');
         $this->db->from($this->collection);
-        $this->db->join($this->article, "{$this->article}.collection_id = {$this->collection}.collection_id");
-		$this->db->join($this->artisan, "{$this->artisan}.article_id = {$this->article}.article_id");
+        $this->db->join($this->collection_artisan, "{$this->collection_artisan}.collection_id = {$this->collection}.collection_id");
+		$this->db->join($this->artisan, "{$this->artisan}.artisan_id = {$this->collection_artisan}.artisan_id");
+        $this->db->join($this->article, "{$this->article}.article_id = {$this->artisan}.article_id");
 		$this->db->join($this->artisan_album, "{$this->artisan_album}.artisan_id = {$this->artisan}.artisan_id");        
 		$this->db->join($this->artisan_product, "{$this->artisan_product}.artisan_id = {$this->artisan}.artisan_id");        
         $this->db->join($this->product, "{$this->product}.product_id = {$this->artisan_product}.product_id");
@@ -54,6 +56,7 @@ class Mod_artisan extends CI_Model{
 		$this->db->where("{$this->enterprise}.enterprise_status", 1);
 		$this->db->where("{$this->article}.article_status", 1);
 		$this->db->where("{$this->artisan}.artisan_id", $id);
+        $this->db->order_by("{$this->collection_artisan}.date_added DESC");
 
 		$query = $this->db->get();
 		

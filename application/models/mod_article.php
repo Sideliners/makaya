@@ -13,7 +13,7 @@ class Mod_article extends CI_Model{
 	
 	function getCollectionArticles($collection_id) {
 		/* Returns a list of article_id's of specified $collection_id */
-		$this->db->where('collection_id', $collection_id);
+		#$this->db->where('collection_id', $collection_id);
 	
 		$this->db->cache_off();
 		$query = $this->db->get($this->article);

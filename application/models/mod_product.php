@@ -5,6 +5,7 @@ class Mod_product extends CI_Model{
 	private $product = 'product';
 	private $product_album = 'product_album';
 	private $collection = 'collection';
+	private $collection_product = 'collection_product';
 	private $article = 'article';
 	private $artisan_product = 'artisan_product';
 	private $artisan = 'artisan';
@@ -60,8 +61,9 @@ class Mod_product extends CI_Model{
 
         $this->db->select('*');
         $this->db->from($this->collection);
-        $this->db->join($this->article, "{$this->article}.collection_id = {$this->collection}.collection_id");
-        $this->db->join($this->product, "{$this->product}.article_id = {$this->article}.article_id");
+        $this->db->join($this->collection_product, "{$this->collection_product}.collection_id = {$this->collection}.collection_id");
+        $this->db->join($this->product, "{$this->product}.product_id = {$this->collection_product}.product_id");
+        $this->db->join($this->article, "{$this->article}.article_id = {$this->product}.article_id");
         $this->db->join($this->product_album, "{$this->product_album}.product_id = {$this->product}.product_id");
 		$this->db->join($this->artisan_product, "{$this->artisan_product}.product_id = {$this->product}.product_id");
         $this->db->join($this->artisan, "{$this->artisan}.artisan_id = {$this->artisan_product}.artisan_id");
@@ -69,6 +71,7 @@ class Mod_product extends CI_Model{
 		$this->db->join($this->enterprise_artisan, "{$this->enterprise_artisan}.artisan_id = {$this->artisan}.artisan_id");
 		$this->db->join($this->enterprise, "{$this->enterprise}.enterprise_id = {$this->enterprise_artisan}.enterprise_id");
 		$this->db->join($this->enterprise_album, "{$this->enterprise_album}.enterprise_id = {$this->enterprise}.enterprise_id");
+
 		$this->db->where("{$this->product}.product_status", 1);
 		$this->db->where("{$this->artisan}.artisan_status", 1);
 		$this->db->where("{$this->enterprise}.enterprise_status", 1);
@@ -77,6 +80,7 @@ class Mod_product extends CI_Model{
 
 		if (!is_null($id)) {
 			$this->db->where("{$this->product}.product_id", $id);
+            $this->db->order_by("{$this->collection_product}.date_added DESC");
 		}
 		
 		$query = $this->db->get();
