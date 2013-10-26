@@ -1,0 +1,101 @@
+body{
+    font-size: 12px !important;
+}
+
+
+/* Floating side menu */
+.bs-docs-sidenav {
+    background-color: #FFFFFF;
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);
+    margin: 30px 0 0;
+    padding: 0;
+    /* width: 228px; */
+    width: 19%;
+}
+.bs-docs-sidenav > li > a {
+    border: 1px solid #E5E5E5;
+    display: block;
+    margin: 0 0 -1px;
+    padding: 8px 14px !important;
+}
+.bs-docs-sidenav > li:first-child > a {
+    border-radius: 6px 6px 0 0;
+}
+.bs-docs-sidenav > li:last-child > a {
+    border-radius: 0 0 6px 6px;
+}
+.bs-docs-sidenav > .active > a {
+    border: 0 none;
+    box-shadow: 1px 0 0 rgba(0, 0, 0, 0.1) inset, -1px 0 0 rgba(0, 0, 0, 0.1) inset;
+    padding: 9px 15px;
+    position: relative;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.15);
+    z-index: 2;
+}
+.bs-docs-sidenav .icon-chevron-right {
+    float: right;
+    margin-right: -6px;
+    margin-top: 2px;
+    opacity: 0.25;
+}
+.bs-docs-sidenav > li > a:hover {
+    background-color: #F5F5F5;
+}
+.bs-docs-sidenav a:hover .icon-chevron-right {
+    opacity: 0.5;
+}
+.bs-docs-sidenav .active .icon-chevron-right, .bs-docs-sidenav .active a:hover .icon-chevron-right {
+    background-image: url("../img/glyphicons-halflings-white.png");
+    opacity: 1;
+}
+.bs-docs-sidebar > .affix {
+    top: 40px;
+}
+.bs-docs-sidenav.affix-bottom {
+    bottom: 270px;
+    position: absolute;
+    top: auto;
+}
+
+/* end of sidenav */
+
+.no-margin{ margin: 0 !important; }
+
+.margin-top { margin-top: 10px !important; }
+.margin-right { margin-right: 10px !important; }
+.margin-bottom { margin-bottom: 10px !important; }
+.margin-left { margin-left: 10px !important; }
+
+.background-white{ background-color: #FFFFFF !important; }
+
+.thumbnail img{ border-radius: 4px; }
+
+#product img { min-width: 100% !important; }
+#artisan img { min-width: 69% !important; }
+#enterprise img{ max-width: 300px; }
+
+#detailsModal {
+	width: 60% !important;
+}
+
+.facebook{
+    color: #0066CC !important;
+}
+.twitter{
+    color: #33CCFF !important;
+}
+.pinterest{
+    color: #E60000 !important;
+}
+
+.facebook:hover, .twitter:hover, .pinterest:hover{ color: #FFFFFF !important; }
+.carousel-inner img{
+    max-width: 150px;
+    min-height: 150px;
+}
+
+.media-object{
+	max-width: 64px;
+    min-height: 64px;
+}
