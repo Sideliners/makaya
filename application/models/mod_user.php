@@ -12,10 +12,8 @@ class Mod_user extends CI_Model{
 		}
 		
 		if(!is_null($is_member)){
-			$this->db->where('is_member', $is_member);
+			$this->db->where('user_type', 4);
 		}
-		
-		$this->db->where('user_type', 3);
 		
 		$this->db->cache_off();
 		$query = $this->db->get($this->user);

@@ -6,48 +6,25 @@ class Article extends MY_Controller{
 		parent::__construct();
 	}
 	
-	public function index($id=NULL, $name=NULL){
-		if (!$this->exists("article", $id, $name)) {
-			redirect(site_url());
-		}		
+	public function index($collection_id=NULL, $article_id=NULL, $article_name=NULL){		
+		if (!$this->exists("article", $article_id, $article_name)) redirect(base_url());
 		
-		$article = $this->mod_article->getArticle($id);		
+		$article = $this->mod_article->get_article($article_id);		
 		
 		if ($article->article_type == "product") {
-			$product = $this->mod_product->getArticleProduct($id);
-			$url_id = $product->product_id;
-			$url_name = $this->clean_string($product->product_name);			
+			$object = $this->mod_article->get_article_product($article_id);
 		}
 		else if ($article->article_type == "artisan") {
-			$artisan = $this->mod_artisan->getArticleArtisan($id);
-			$url_id = $artisan->artisan_id;
-			$url_name = $this->clean_string($artisan->artisan_name);			
+			$object = $this->mod_article->get_article_artisan($article_id);
 		}
 		else if ($article->article_type == "enterprise") {
-			$enterprise = $this->mod_enterprise->getArticleEnterprise($id);
-			$url_id = $enterprise->enterprise_id;
-			$url_name = $this->clean_string($enterprise->enterprise_name);			
+			$object = $this->mod_article->get_article_enterprise($article_id);
 		}
 		
-		if (empty($url_id) && empty($url_name)) {
-			redirect(site_url());
-		}
+		if (!isset($object)) redirect(base_url());
 		
-		$url = site_url("{$article->article_type}/{$url_id}/{$url_name}" );
+		$clean_name = $this->clean_string($object->name);
+		$url = site_url("{$article->article_type}/{$collection_id}/{$object->id}/{$clean_name}");
 		redirect($url);
 	}
-	
-	public function view($id=NULL, $name=NULL) {
-		$pagedata['page_title'] = 'Article';
-		$pagedata['page'] = 'Article';
-		
-		$article = $this->mod_article->getArticle($id);
-		$article->theme = $this->mod_article->getArticleTheme($id);
-		$pagedata['article'] = $article;
-		
-        $contentdata['script'] = array('article');
-        $contentdata['page'] = $this->load->view('page/article', $pagedata, TRUE);
-
-        $this->templateLoader($contentdata);
-	}	
 }

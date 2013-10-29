@@ -99,3 +99,12 @@ body{
 	max-width: 64px;
     min-height: 64px;
 }
+
+div.center-cropped {
+    width: 150px;
+    height: 150px;
+    background-position: center center;
+    background-repeat: no-repeat;	
+}
+
+.album-li{ margin-left: 20px !important; }

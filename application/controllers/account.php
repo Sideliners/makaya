@@ -53,8 +53,7 @@ class Account extends MY_Controller{
 								'user_password' => $this->encrypt->sha1($params->inputPassword),
 								'firstname' => $params->f_name,
 								'lastname' => $params->l_name,
-								'user_type' => 3,
-								'is_member' => 1,
+								'user_type' => 4,
 								'date_created' => date($this->config->item('datetime'))
 							);
 							
@@ -96,11 +95,11 @@ class Account extends MY_Controller{
 					$pagedata['error_msg'] = 'Please enter your password';
 				}
 				else{
-					$check = $this->checkemail($params->inputEmail, $this->encrypt->sha1($params->inputPassword));
+					$check = $this->checkemail($params->inputEmail, $this->encrypt->sha1($params->inputPassword), 1);
 					
 					if(is_object($check)){
 						// create sessions
-						$data = array('email' => $params->inputEmail);
+						$data = array('email' 	=> $params->inputEmail);
 						
 						$this->_create_session($data);
 						redirect(base_url());

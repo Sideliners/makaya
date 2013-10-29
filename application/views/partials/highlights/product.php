@@ -11,7 +11,7 @@
         <div class="pull-right">
         	<div id="artisan">
                 <p class="text-center">
-                    <a href="<?=site_url('artisan/'.$highlights->artisan_id.'/'.$highlights->clean_aname);?>" class="thumbnail background-white" title="<?=$highlights->artisan_name;?>">
+                    <a href="<?=site_url('artisan/'.$highlights->collection_id.'/'.$highlights->artisan_id.'/'.$highlights->clean_aname);?>" class="thumbnail background-white" title="<?=$highlights->artisan_name;?>">
                         <img src="<?=$this->config->item('image_artisan_path').$highlights->artisan_image;?>" alt="<?=$highlights->artisan_name;?>" title="<?=$highlights->artisan_name;?>" />
                         <strong><?=$highlights->artisan_name;?></strong>
                     </a>
@@ -19,7 +19,7 @@
             </div>
             <div id="enterprise">
                 <p class="text-center">
-                    <a href="<?=site_url('enterprise/'.$highlights->enterprise_id.'/'.$highlights->clean_ename);?>" class="thumbnail background-white" title="<?=$highlights->enterprise_name;?>">
+                    <a href="<?=site_url('enterprise/'.$highlights->collection_id.'/'.$highlights->enterprise_id.'/'.$highlights->clean_ename);?>" class="thumbnail background-white" title="<?=$highlights->enterprise_name;?>">
                         <img src="<?=$this->config->item('image_enterprise_path').$highlights->enterprise_image;?>" alt="<?=$highlights->enterprise_name;?>" title="<?=$highlights->enterprise_name;?>" />
                         <strong><?=$highlights->enterprise_name;?></strong>
                     </a>
@@ -39,7 +39,7 @@
         </dl>
     </div>
     <span id="read_more"><a class="btn-link" role="button" onclick="show_details('product',<?=$highlights->product_id?>)">READ MORE</a></span>
-	<?php else: 
-        redirect(site_url());
-	endif; ?>
+	<?php else: ?>
+        <h1>No Product to Display</h>
+	<?php endif; ?>
 </div>

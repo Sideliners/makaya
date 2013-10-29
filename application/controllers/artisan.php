@@ -6,21 +6,20 @@ class Artisan extends MY_Controller{
         parent::__construct();		
     }
 
-    public function index($id=NULL, $name=NULL){
-		if (!$this->exists("artisan", $id, $name)) {
-			redirect(site_url());
-		}
+    public function index($collection_id=NULL, $artisan_id=NULL, $artisan_name=NULL){		
+		if (!$this->exists("artisan", $artisan_id, $artisan_name)) redirect(base_url());
 		
         $pagedata['xpage_title'] = 'Artisan';
 		$pagedata['page'] = 'Artisan';
 		
-		$carouseldata['carousel'] = $this->_getCarouselDetails('artisan', $id);
+		$this->set_meta_params("artisan", $collection_id, $artisan_id);
+		$carouseldata['carousel'] = $this->_get_carousel_details('artisan', $collection_id, $artisan_id);
 		$pagedata['carousel'] = $this->load->view('partials/carousel', $carouseldata, TRUE);
 		
-		$highlightsdata['highlights'] = $this->_getHighlightsDeck('artisan',$id);
+		$highlightsdata['highlights'] = $this->_get_highlights_deck('artisan', $collection_id, $artisan_id);
 		$pagedata['highlights'] = $this->load->view('partials/highlights/artisan', $highlightsdata, TRUE);
 
-		$springboardsdata['springboards'] = $this->_getSpringboardsList();
+		$springboardsdata['springboards'] = $this->_get_springboards_list();
 		$pagedata['springboards'] = $this->load->view('partials/springboards', $springboardsdata, TRUE);
 
         $contentdata['script'] = array('admin');
@@ -32,16 +31,17 @@ class Artisan extends MY_Controller{
 	public function detail() {
 		if(!$this->input->is_ajax_request()) redirect(base_url());
 		
-		$id = intval($this->input->post('id'));
-		$data = $this->mod_artisan->getArtisan($id);
+		$artisan_id = intval($this->input->post("id"));
+		$data = $this->mod_artisan->get_artisan($artisan_id);
 		
-		if(is_object($data)){
-			$jsondata = array('status' => 1, 'response' => $data->artisan_id);
+		$status = 0;
+		$message = "No Details for this Artisan";
+		if (is_object($data)) {
+			$status = 1;
+			$message = $data->artisan_id;
 		}
-		else{
-			$jsondata = array('status' => 0, 'response' => 'No Details for this Artisan');
-		}
-				
+		
+		$jsondata = array('status' => $status, 'response' => $message);
 		echo json_encode($jsondata);
 	}
 }

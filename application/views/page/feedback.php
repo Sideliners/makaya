@@ -5,7 +5,7 @@
             foreach ($feedbacks as $feedback) {
                 echo "<div>";
                 echo "<h4 class='text'>{$feedback->feedback_subject}</h4>";
-				echo "<span class='text text-info'>by <strong>{$feedback->feedback_email}</strong> last <strong>{$feedback->feedback_date_created}</strong></span>";
+				echo "<span class='text text-info'>by <strong>{$feedback->feedback_email}</strong> last <strong>{$feedback->date_added}</strong></span>";
                 echo "<div class='alert alert-info'>{$feedback->feedback_message}</div>";
                 echo "</div>";
             }

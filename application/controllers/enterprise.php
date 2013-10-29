@@ -6,21 +6,20 @@ class Enterprise extends MY_Controller{
         parent::__construct();		
     }
 
-    public function index($id=NULL, $name=NULL){
-		if (!$this->exists("enterprise", $id, $name)) {
-			redirect(site_url());
-		}
+    public function index($collection_id=NULL, $enterprise_id=NULL, $enterprise_name=NULL){		
+		if (!$this->exists("enterprise", $enterprise_id, $enterprise_name)) redirect(base_url());
 		
         $pagedata['xpage_title'] = 'Enterprise';
 		$pagedata['page'] = 'Enterprise';
 		
-		$carouseldata['carousel'] = $this->_getCarouselDetails('enterprise', $id);
+		$this->set_meta_params("enterprise", $collection_id, $enterprise_id);
+		$carouseldata['carousel'] = $this->_get_carousel_details('enterprise', $collection_id, $enterprise_id);
 		$pagedata['carousel'] = $this->load->view('partials/carousel', $carouseldata, TRUE);
 		
-		$highlightsdata['highlights'] = $this->_getHighlightsDeck('enterprise',$id);
+		$highlightsdata['highlights'] = $this->_get_highlights_deck('enterprise', $collection_id, $enterprise_id);
 		$pagedata['highlights'] = $this->load->view('partials/highlights/enterprise', $highlightsdata, TRUE);
 
-		$springboardsdata['springboards'] = $this->_getSpringboardsList();
+		$springboardsdata['springboards'] = $this->_get_springboards_list();
 		$pagedata['springboards'] = $this->load->view('partials/springboards', $springboardsdata, TRUE);
 
         $contentdata['script'] = array('admin');
@@ -32,16 +31,17 @@ class Enterprise extends MY_Controller{
 	public function detail() {
 		if(!$this->input->is_ajax_request()) redirect(base_url());
 		
-		$id = intval($this->input->post('id'));
-		$data = $this->mod_enterprise->getEnterprise($id);
+		$enterprise_id = intval($this->input->post("id"));
+		$data = $this->mod_enterprise->get_enterprise($enterprise_id);
 		
-		if(is_object($data)){
-			$jsondata = array('status' => 1, 'response' => $data->enterprise_id);
+		$status = 0;
+		$message = "No Details for this Enterprise";
+		if (is_object($data)) {
+			$status = 1;
+			$message = $data->enterprise_id;
 		}
-		else{
-			$jsondata = array('status' => 0, 'response' => 'No Details for this Enterprise');
-		}
-				
+		
+		$jsondata = array('status' => $status, 'response' => $message);
 		echo json_encode($jsondata);
 	}
 }

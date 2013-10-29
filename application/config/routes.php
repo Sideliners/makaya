@@ -48,11 +48,12 @@ $route['page/legal-copyright'] = 'page/legalcopyright';
 $route['shopping-cart'] = 'cart';
 $route['page/customer-support'] = 'page/customersupport';
 
-$route['product/(:num)/(:any)'] = 'product/index/$1/$2';
-$route['artisan/(:num)/(:any)'] = 'artisan/index/$1/$2';
-$route['enterprise/(:num)/(:any)'] = 'enterprise/index/$1/$2';
+$route['product/(:num)/(:num)/(:any)'] = 'product/index/$1/$2/$3';
+$route['artisan/(:num)/(:num)/(:any)'] = 'artisan/index/$1/$2/$3';
+$route['enterprise/(:num)/(:num)/(:any)'] = 'enterprise/index/$1/$2/$3';
 
-$route['article/(:num)/(:any)'] = 'article/index/$1/$2';
+$route['article/(:num)/(:num)/(:any)'] = 'article/index/$1/$2/$3';
+$route['collection/(:num)/(:any)'] = 'collection/index/$1/$2';
 
 $route['search/(:any)'] = 'search/index/$1';
 

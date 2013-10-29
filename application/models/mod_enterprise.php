@@ -1,43 +1,20 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Mod_enterprise extends CI_Model{
-	
+class Mod_enterprise extends CI_Model{	
 	private $artisan = 'artisan';
 	private $artisan_album = 'artisan_album';
+	private $artisan_product = 'artisan_product';
+	private $article = 'article';
 	private $collection = 'collection';
 	private $collection_enterprise = 'collection_enterprise';
-	private $article = 'article';
-	private $artisan_product = 'artisan_product';
+	private $enterprise = 'enterprise';	
+	private $enterprise_album = 'enterprise_album';
+	private $enterprise_artisan = 'enterprise_artisan';	
 	private $product = 'product';
 	private $product_album = 'product_album';
-	private $enterprise_artisan = 'enterprise_artisan';
-	private $enterprise = 'enterprise';
-	private $enterprise_album = 'enterprise_album';
-				
-	function getEnterpriseList() {
-		/* Returns a list of all active enterprises */
-
-		$this->db->cache_off();
-		$this->db->select(
-			"{$this->enterprise}.enterprise_id AS id, " .
-			"{$this->enterprise}.enterprise_name AS name, " .
-			"{$this->enterprise_album}.enterprise_image AS image_name, " 
-		);
-		$this->db->from($this->enterprise);
-        $this->db->join($this->enterprise_album, "{$this->enterprise_album}.enterprise_id = {$this->enterprise}.enterprise_id");
-
-		$this->db->where("{$this->enterprise}.enterprise_status", 1);
-		$this->db->where("{$this->enterprise_album}.is_primary", 1);
 		
-		$query = $this->db->get();
-		if($query->num_rows() > 0)
-			return $query->result();
-
-		return FALSE;
-	}
-	
-	function getEnterpriseDetails($id=NULL){
-
+	function get_enterprise_details($collection_id=NULL, $enterprise_id=NULL){
+		$this->db->cache_off();
         $this->db->select('*');
         $this->db->from($this->collection);
         $this->db->join($this->collection_enterprise, "{$this->collection_enterprise}.collection_id = {$this->collection}.collection_id");
@@ -50,61 +27,43 @@ class Mod_enterprise extends CI_Model{
 		$this->db->join($this->artisan_product, "{$this->artisan_product}.artisan_id = {$this->artisan}.artisan_id");
         $this->db->join($this->product, "{$this->product}.product_id = {$this->artisan_product}.product_id");
         $this->db->join($this->product_album, "{$this->product_album}.product_id = {$this->product}.product_id");
+		$this->db->where("{$this->collection}.collection_status", 1);
 		$this->db->where("{$this->product}.product_status", 1);
 		$this->db->where("{$this->artisan}.artisan_status", 1);
 		$this->db->where("{$this->enterprise}.enterprise_status", 1);
 		$this->db->where("{$this->article}.article_status", 1);
-		$this->db->where("{$this->enterprise}.enterprise_id", $id);
-        $this->db->order_by("{$this->collection_enterprise}.date_added DESC");
-
-		$query = $this->db->get();
+		$this->db->where("{$this->enterprise}.enterprise_id", $enterprise_id);
+		$this->db->where("{$this->collection}.collection_id", $collection_id);
 		
-		return $query->row();
+		$query = $this->db->get();
+		if($query->num_rows() > 0)
+			return $query->row();
+		
+		return FALSE;
 	}	
 		
-	function getEnterprise($id) {
-		/* Returns a row of active enterprise $id */
-		$this->db->where('enterprise_id', $id);
-		$this->db->where('enterprise_status', 1);
-		
+	function get_enterprise($enterprise_id) {
 		$this->db->cache_off();
-		$query = $this->db->get($this->enterprise);
-		
+		$this->db->where('enterprise_id', $enterprise_id);
+		$this->db->where('enterprise_status', 1);
+				
+		$query = $this->db->get($this->enterprise);		
 		if($query->num_rows() > 0)
 			return $query->row();
 		
 		return FALSE;
 	}	
 	
-	function enterpriseExists($id, $name) {
-		$this->db->cache_off();
-		
+	function enterprise_exists($enterprise_id, $enterprise_name) {
+		$this->db->cache_off();		
 		$this->db->select('*');
 		$this->db->from($this->enterprise);
-		$this->db->like('enterprise_name', $name);
-		$this->db->where('enterprise_id', $id);
+		$this->db->where('enterprise_id', $enterprise_id);
+		$this->db->like('enterprise_name', $enterprise_name);
 		
-		$query = $this->db->get();
-		
+		$query = $this->db->get();		
 		if($query->num_rows() > 0)
 			return TRUE;
-		
-		return FALSE;
-	}
-	
-	function getArticleEnterprise($article_id=NULL) {
-		$this->db->cache_off();
-		
-		$this->db->select('*');
-		$this->db->from($this->enterprise);
-		$this->db->join($this->enterprise_album, "{$this->enterprise_album}.enterprise_id = {$this->enterprise}.enterprise_id");		
-		$this->db->where("article_id", $article_id);
-		$this->db->where("enterprise_status", 1);
-		
-		$query = $this->db->get();
-		
-		if($query->num_rows() > 0)
-			return $query->row();
 		
 		return FALSE;
 	}

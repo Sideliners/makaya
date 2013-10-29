@@ -1,14 +1,18 @@
 <div class="well well-small">
 	<h3><?=$page_title?></h3>
     <?php
-		  if ( !isset($product) ) {
-			  echo "<div class='row-fluid'>";
-			  foreach ( $products as $product) {	
-				  echo "<span class='pull-left well'  style='max-width: 100px;'>";
-				  echo "<img src='".$this->config->item('image_product_path').$product->primary_image."'/><br>";
-				  echo "<a href='".site_url("product/".$product->product_id."/".$product->clean_pname)."' alt='{$product->product_name}' title='{$product->product_name}'>{$product->product_name}</a><br>";
-				  echo "</span>";
+		  if (!empty($products) ) {
+			  echo "<div>";			  
+			  echo '<ul class="inline">';
+			  
+			  foreach ($products as $product) {                    
+              	echo "<li class='thumbnail album-li'>";
+				echo "<div class='center-cropped' style='background-image: url(\"{$product->image_path}\")'></div>";
+				echo "<a href='" . site_url($product->url) . "'>{$product->product_name}</a>";
+				echo "</li>";
 			  }
+			  
+			  echo "</ul>";
 			  echo "</div>";
 		  }
 		  else {

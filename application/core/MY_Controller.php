@@ -3,29 +3,40 @@
 class MY_Controller extends CI_Controller{
 	
 	protected $_user;
+	private $meta_params;
 	
     function __construct(){
         parent::__construct();
-
     }
+	
+	function set_meta_params($page, $collection_id, $id) {
+		$this->meta_params = array( 
+					"page"			=>	$page,
+					"collection_id" =>	$collection_id,
+					"id"			=>  $id
+					);
+	}
 
     function templateLoader($contentdata){
 		if($this->session->userdata('email')){
-			if($this->_getUserDetails($this->session->userdata('email'))){
+			if($this->_get_user_details($this->session->userdata('email'))){
 				$navdata['user']['email'] = $this->session->userdata('email');
 				$navdata['user']['fname'] = $this->_user->firstname;
 			}
 		}
 
-        $navdata['site_title'] = $this->site_name();
-		$navdata['pinterest'] = (object)$this->pinterest_params($this->uri->segment(1), intval($this->uri->segment(2)));
-		$navdata['twitterPost'] = $this->twitter_params($this->uri->segment(1), intval($this->uri->segment(2)));
+        $navdata['site_title'] = $this->site_name();		
 		
-		$backbonedata['backbone'] = $this->getBackboneList();
+		$page = $this->meta_params["page"];
+		$collection_id = $this->meta_params["collection_id"];
+		$id = $this->meta_params["id"];
 		
+		$navdata['pinterest'] = (object)$this->pinterest_params($page, $collection_id, $id);
+		$navdata['twitterPost'] = $this->twitter_params($page, $collection_id, $id);
+
 		$script = array_pop(array_reverse($contentdata));
 		
-        $templatedata['metatags'] = $this->meta_data($this->uri->segment(1), intval($this->uri->segment(2)));
+        $templatedata['metatags'] = $this->meta_data($page, $collection_id, $id);
 
         $templatedata['scripts'] = $this->page_script($script);
 		$templatedata['modals'] = $this->load->view('template/modals', NULL, TRUE);
@@ -33,20 +44,22 @@ class MY_Controller extends CI_Controller{
         $templatedata['navigation'] = $this->load->view('partials/navigation', $navdata, TRUE);
         $templatedata['sidemenu'] = $this->load->view('partials/sidemenu', $navdata, TRUE);
         $templatedata['content'] = $this->load->view('template/content', $contentdata, TRUE);
+		
+		$backbonedata['backbone'] = $this->get_backbone_list();
 		$templatedata['backbone'] = $this->load->view('partials/backbone', $backbonedata, TRUE);
 
         $this->load->view('template/main', $templatedata);
     }
 	
-	private function get_product($id){
-		$product = $this->mod_product->getProductDetails();
+	private function get_product($collection_id=NULL, $product_id=NULL){
+		$product = $this->mod_product->get_product_details($collection_id, $product_id);
 		
 		return $product;
 	}
 	
-	private function pinterest_params($page, $id){
+	private function pinterest_params($page, $collection_id, $id){
 		if($page == 'product'){
-			$product = $this->get_product($id);
+			$product = $this->get_product($collection_id, $id);
 			$pinterest_params = array(
 				'url' => current_url(),
 				'media' => $this->config->item('image_product_path').$product->product_image,
@@ -64,9 +77,9 @@ class MY_Controller extends CI_Controller{
 		return $pinterest_params;
 	}
 	
-	private function twitter_params($page, $id){
+	private function twitter_params($page,$collection_id, $id){
 		if($page == 'product'){
-			$product = $this->get_product($id);
+			$product = $this->get_product($collection_id, $id);
 			$description = strip_tags($product->product_description);
 			
 			$post = "{$product->product_name} &mdash; {$description}\n";
@@ -78,11 +91,11 @@ class MY_Controller extends CI_Controller{
 		return $post;
 	}
 	
-	private function meta_data($page, $id){
+	private function meta_data($page, $collection_id, $id){
 		$meta = "<meta property='fb:app_id' content='176244019234035' />\n\t";
 		
 		 if($page == 'product'){
-			$product = $this->get_product($id);
+			$product = $this->get_product($collection_id, $id);
 			$image = $this->config->item('image_product_path').$product->product_image;
 			$description = strip_tags($product->product_description);
 			
@@ -143,7 +156,7 @@ class MY_Controller extends CI_Controller{
 		return FALSE;
 	}
 	
-	function _getUserDetails($email){
+	function _get_user_details($email){
 		$this->load->model('mod_user');
 		
 		$this->_user = $this->mod_user->getUserDetails($email);
@@ -185,14 +198,10 @@ class MY_Controller extends CI_Controller{
         return $scripts;
     }
 
-	function _getCarouselDetails($type=NULL,$id=NULL) {
-		#if (!isset($object_list) || empty($object_list) || !isset($image_path) || empty($image_path)) {
-		#	return NULL;
-		#}
+	function _get_carousel_details($type=NULL, $collection_id=NULL, $id=NULL) {			
+		$carousel = $this->mod_collection->get_collection_carousel($collection_id, $type, $id);
+		if (empty($carousel)) return NULL;
 		
-		$collection_id = NULL;
-		$collection_id = $this->mod_collection->getCollectionId($type, $id);
-		$carousel = $this->mod_collection->getCollectionCarousel($collection_id);
 		foreach ($carousel as $object) {
             $image_path = array (
                     "product"    => $this->config->item('image_product_path'),
@@ -202,28 +211,25 @@ class MY_Controller extends CI_Controller{
 
             $type = $object->article_type;
 			$clean_name = $this->clean_string($object->name);
-			$object->url = site_url("{$type}/{$object->id}/{$clean_name}");
+			$object->url = site_url("{$type}/{$collection_id}/{$object->id}/{$clean_name}");
 			$object->image = "{$image_path[$type]}{$object->image}";
 		}
 		
 		return $carousel;
 	}
 
-	function _getHighlightsDeck($type, $id=NULL) {
-		
-		if ($type == "product") {
-			$highlights = $this->mod_product->getProductDetails($id);
+	function _get_highlights_deck($type=NULL, $collection_id=NULL, $id=NULL) {		
+		if ($type == "product") {			
+			$highlights = $this->mod_product->get_product_details($collection_id, $id);
 		}
 		else if ($type == "artisan") {
-			$highlights = $this->mod_artisan->getArtisanDetails($id);
+			$highlights = $this->mod_artisan->get_artisan_details($collection_id, $id);
 		}
 		else if ($type == "enterprise") {
-			$highlights = $this->mod_enterprise->getEnterpriseDetails($id);
+			$highlights = $this->mod_enterprise->get_enterprise_details($collection_id, $id);
 		}
 		
-		if (!isset($highlights) || empty($highlights)) {
-			return NULL;
-		}
+		if (!isset($highlights) || empty($highlights)) return NULL;
 
 		$highlights->clean_pname = ($pname = $highlights->product_name) ? $this->clean_string($pname) : "#";
 		$highlights->clean_aname = ($aname = $highlights->artisan_name) ? $this->clean_string($aname) : "#";
@@ -232,37 +238,32 @@ class MY_Controller extends CI_Controller{
 		return $highlights;
 	}
 
-	function _getSpringboardsList() {
-		/* Returns a list of Springboards Link Pages */
-
+	function _get_springboards_list() {
 		$collections = array();
-
-		if ($collection_object = $this->mod_collection->getCollectionArticleLists()) {
-
+		if ($collection_object = $this->mod_collection->get_collection_article_lists()) {
 			foreach ( $collection_object as $collection ) {
                 $name = $collection->collection_name;
-
 				$article = array (
-                    "id"         => $collection->id,
-                    "url_title"  => $this->clean_string($collection->title),
-                    "title"      => $collection->title,
-                    "image_name" => $collection->image
+					"collection_id"	=>	$collection->collection_id, 
+                    "article_id"    =>	$collection->article_id,
+                    "url_title"  	=> 	$this->clean_string($collection->article_title),
+                    "title"      	=> 	$collection->article_title,
+                    "image_name" 	=> 	$collection->article_image
                 );
-
-				$collections[$name][$collection->id] = $article;
+				$collections[$name][$collection->article_id] = $article;
 			}
 		}
         
 		return $collections;
 	}
 
-	private function getBackboneList() {
+	private function get_backbone_list() {
 		/* Returns a list of Backbone Link Pages */
 
 		$pages = array(
 					'About Us' => site_url('page/about-us'),
 					'Acknowledgements' => site_url('page/acknowledgements'),
-					'Partners' => site_url('page/page/partners'),
+					'Partners' => site_url('page/partners'),
 					'Terms Of Use' => site_url('page/terms-of-use'),
 					'Legal Copyright' => site_url('page/legal-copyright')
 					);
@@ -278,12 +279,11 @@ class MY_Controller extends CI_Controller{
 					'Browse Makaya Products' => '',
 					);
 
-		if ($collection_object = $this->mod_collection->getCollectionList()) {
+		if ($collection_object = $this->mod_collection->get_collection_list()) {
 			foreach ( $collection_object as $collection ) {
 				$id = $collection->collection_id;
 				$name = $this->clean_string($collection->collection_name);
 				$uri = site_url("collection/{$id}/{$name}");
-
 				$collections[$collection->collection_name] = $uri;
 			}
 		}
@@ -298,7 +298,7 @@ class MY_Controller extends CI_Controller{
 	function clean_string($string) {
 		$cleaned_string = preg_replace('/\s/','-', $string);
 		$cleaned_string = strtolower( $cleaned_string );
-		$cleaned_string = preg_replace('/&/','and', $cleaned_string);
+		#$cleaned_string = preg_replace('/&/','and', $cleaned_string);
 		$cleaned_string = preg_replace('/[^a-z0-9-]/','', $cleaned_string);
 
 		return $cleaned_string;
@@ -306,7 +306,7 @@ class MY_Controller extends CI_Controller{
 	
 	function restore_string($string) {
 		$original_string = preg_replace('/-/',' ', $string);		
-		$original_string = preg_replace('/and/','&', $original_string);		
+		#$original_string = preg_replace('/and/','&', $original_string);		
 
 		return $original_string;
 	}
@@ -318,19 +318,22 @@ class MY_Controller extends CI_Controller{
 		$name = $this->restore_string($name);
 		
 		if ($type == "product") {
-			return $this->mod_product->productExists($id, $name);
+			return $this->mod_product->product_exists($id, $name);
 		}
 		else if ($type == "artisan") {
-			return $this->mod_artisan->artisanExists($id, $name);
+			return $this->mod_artisan->artisan_exists($id, $name);
 		}
 		else if ($type == "enterprise") {
-			return $this->mod_enterprise->enterpriseExists($id, $name);
+			return $this->mod_enterprise->enterprise_exists($id, $name);
 		}
 		else if ($type == "article") {
-			return $this->mod_article->articleExists($id, $name);
+			return $this->mod_article->article_exists($id, $name);
+		}
+		else if ($type == "collection") {
+			return $this->mod_collection->collection_exists($id, $name);
 		}
 		else {
-			return FALSE;	
+			return FALSE;
 		}
 	}
 }

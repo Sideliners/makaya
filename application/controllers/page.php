@@ -10,13 +10,15 @@ class Page extends MY_Controller{
         $pagedata['xpage_title'] = 'Home';
 		$pagedata['page'] = 'Home';
 		
-		$carouseldata['carousel'] = $this->_getCarouselDetails('product');
+		$product = $this->mod_product->get_highlighted_product();
+		$this->set_meta_params("product", $product->collection_id, $product->product_id);
+		$carouseldata['carousel'] = $this->_get_carousel_details('product', $product->collection_id, $product->product_id);
 		$pagedata['carousel'] = $this->load->view('partials/carousel', $carouseldata, TRUE);
 		
-	    $highlightsdata['highlights'] = $this->_getHighlightsDeck('product');
+	    $highlightsdata['highlights'] = $this->_get_highlights_deck('product', $product->collection_id, $product->product_id);
 		$pagedata['highlights'] = $this->load->view('partials/highlights/product', $highlightsdata, TRUE);
 		
-		$springboardsdata['springboards'] = $this->_getSpringboardsList();
+		$springboardsdata['springboards'] = $this->_get_springboards_list();
 		$pagedata['springboards'] = $this->load->view('partials/springboards', $springboardsdata, TRUE);
 
         $contentdata['script'] = array('admin');
@@ -28,8 +30,6 @@ class Page extends MY_Controller{
 	public function aboutus() {
 		$pagedata['page_title'] = 'About Us';
         $pagedata['page'] = 'About Us';
-		
-		$pagedata['content'] = 'We Are Makaya';
 
         $contentdata['script'] = array('aboutus');
         $contentdata['page'] = $this->load->view('page/aboutus', $pagedata, TRUE);
@@ -40,8 +40,6 @@ class Page extends MY_Controller{
 	public function acknowledgements() {
 		$pagedata['page_title'] = 'Acknowledgements';
 		$pagedata['page'] = 'Acknowledgements';
-		
-		$pagedata['content'] = 'aknowledgement page';
 
         $contentdata['script'] = array('acknowledgements');
         $contentdata['page'] = $this->load->view('page/acknowledgements', $pagedata, TRUE);
@@ -52,8 +50,6 @@ class Page extends MY_Controller{
 	public function partners() {
 		$pagedata['page_title'] = 'Partners';
 		$pagedata['page'] = 'Partners';
-		
-		$pagedata['content'] = 'partners page';
 
         $contentdata['script'] = array('partners');
         $contentdata['page'] = $this->load->view('page/partners', $pagedata, TRUE);
@@ -63,9 +59,7 @@ class Page extends MY_Controller{
 	
 	public function termsofuse() {
 		$pagedata['page_title'] = 'Terms Of Use';
-		$pagedata['page'] = 'Partners';
-		
-		$pagedata['content'] = 'terms of use page';
+		$pagedata['page'] = 'Partners';		
 
         $contentdata['script'] = array('termsofuse');
         $contentdata['page'] = $this->load->view('page/termsofuse', $pagedata, TRUE);
@@ -75,9 +69,7 @@ class Page extends MY_Controller{
 	
 	public function legalcopyright() {
 		$pagedata['page_title'] = 'Legal Copyright';
-		$pagedata['page'] = 'Legal Copyright';
-		
-		$pagedata['content'] = 'Legal Copyright page';
+		$pagedata['page'] = 'Legal Copyright';		
 
         $contentdata['script'] = array('legalcopyright');
         $contentdata['page'] = $this->load->view('page/legalcopyright', $pagedata, TRUE);
@@ -148,7 +140,7 @@ class Page extends MY_Controller{
 					'feedback_email' => $email,
 					'feedback_subject' => $params->subject,
 					'feedback_message' => $params->message,
-					'feedback_date_created' => date($this->config->item('datetime'))
+					'date_added' => date($this->config->item('datetime'))
 					);
 				
 				if ($this->mod_feedback->create_feedback($data)) {
@@ -161,7 +153,7 @@ class Page extends MY_Controller{
 			}
 		}
 		
-		$pagedata['feedbacks'] = $this->mod_feedback->getFeedbacks();	
+		$pagedata['feedbacks'] = $this->mod_feedback->get_feedbacks();	
 		
         $contentdata['script'] = array('feedback');
         $contentdata['page'] = $this->load->view('page/feedback', $pagedata, TRUE);
