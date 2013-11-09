@@ -15,7 +15,7 @@
         <tbody>
             <?php foreach($orders as $item): ?>
             <tr>
-                <td><img sr="<?=$imgpath.$item['image'];?>" style="max-width: 64px;" /></td>
+                <td><img src="<?=$imgpath.$item['image'];?>" style="max-width: 64px;" /></td>
                 <td><?=$item['name'];?>&nbsp;&nbsp;<small><a data-item-id="<?=$item['rowid'];?>" class="remove-item btn-link" role="button" data-toggle="tooltip" data-original-title="remove" data-placement="top" onmouseover="$(this).tooltip('show')"><i class="icon-remove"></i></a></small></td>
                 <td><center>$ <?=$item['price'];?></center></td>
                 <td>
@@ -44,8 +44,8 @@
         </div>
 
         <div class="pull-right">
-            <button class="btn btn-warning">Checkout via Paypal</button>
-            <button class="btn btn-info">Checkout</button>
+            <a href="javascript:alert('Paypal Payment')" class="btn btn-warning">Checkout via Paypal</a>
+            <a href="<?=site_url('cart/checkout')?>" class="btn btn-info">Checkout</a>
         </div>
     </div>
     <?php else: ?>

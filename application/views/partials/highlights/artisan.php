@@ -40,6 +40,6 @@
     </div>
     <span id="read_more"><a href="#" onclick="show_details('artisan',<?=$highlights->artisan_id?>)">READ MORE</a></span>
 	<?php else: ?>
-        <h1>No Artisan to Display</h>
+        <h1>No Artisan to Display</h1>
 	<?php endif; ?>
 </div>

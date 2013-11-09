@@ -22,7 +22,8 @@ $(function(){
 		$('#detailsModal #add_to_cart').hide();
 	});
 
-    $('body').on('click', '#detailsModal #add_to_cart', function(event){
+    $('body').on('click', '#add_to_cart', function(event){
+		
         var prod_id = $(this).attr('data-product-id');
 
         if(isNaN(prod_id)){
@@ -34,9 +35,9 @@ $(function(){
 
         $.post(site_url + 'cart/add', {
             pid : prod_id
-        }, function(data){
+        }, function(data){			
             if(data.status > 0){
-                $('#detailsModal #modal-msg').html('<span class="label label-success">' + data.response + '</span> <a href="' + site_url + 'shopping-cart">View cart now</a>');
+                $('#detailsModal #modal-msg').html('<span class="label label-success">' + data.response + '</span> <a href="' + site_url + 'shopping-cart">View cart now</a>');				
             }
             else{
                 alert(data.response);

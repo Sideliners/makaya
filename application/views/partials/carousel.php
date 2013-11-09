@@ -1,4 +1,4 @@
-<div class="well well-small">
+<div>
     <div class="container-fluid">
         <div id="myCarousel" class="carousel slide">
             <!-- Carousel items -->
@@ -8,7 +8,7 @@
                 <div class="item <?php echo ($c == 1)? 'active' : ''; $c++; ?>">
                     <?php foreach($carousel as $object): ?>
                     <div class="span2">
-                        <a href='<?=$object->url?>'><img src="<?=$object->image;?>" alt="<?=$object->name;?>" /></a>
+                        <a href='<?=$object->url?>' title='<?=$object->name?>' class='thumbnail background-white'><img src="<?=$object->image;?>" alt="<?=$object->name;?>" title="<?=$object->name;?>"/></a>
                     </div>
                     <?php endforeach; if($c == 3) break; ?>
                 </div>

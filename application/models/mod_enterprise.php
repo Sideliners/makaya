@@ -67,4 +67,15 @@ class Mod_enterprise extends CI_Model{
 		
 		return FALSE;
 	}
+			
+	function get_enterprises() {
+		$this->db->cache_off();
+		$this->db->where('enterprise_status', 1);
+				
+		$query = $this->db->get($this->enterprise);		
+		if($query->num_rows() > 0)
+			return $query->result();
+		
+		return FALSE;
+	}
 }

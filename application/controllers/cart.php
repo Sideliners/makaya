@@ -33,9 +33,9 @@ class Cart extends MY_Controller{
         if(!$this->input->is_ajax_request()) redirect(base_url());
         
         $pid = $this->input->post('pid');
-
+		
         if(is_numeric($pid)){
-            $product = $this->mod_product->getProduct($pid);
+            $product = $this->mod_product->get_product($pid);
 
             $item_count = count($pid);
 
@@ -77,9 +77,9 @@ class Cart extends MY_Controller{
         $cdata = array(
             'id' => 'sku_prod_'.$product->product_id,
             'qty' => 1,
-            'price' => $product->product_price,
+            'price' => $product->price,
             'name' => $product->product_name,
-            'image' => $product->primary_image
+            'image' => $product->product_image
         );
 
         return $this->cart->insert($cdata); 
@@ -131,4 +131,16 @@ class Cart extends MY_Controller{
             echo 'Invalid Parameters';
         }
     }
+	
+	public function checkout() {
+		$pagedata['page_title'] = 'Shipping Info';
+		$pagedata['page'] = 'Shipping Info';
+		
+		$pagedata['countries'] = $this->mod_country->get_countries();		
+		
+        $contentdata['script'] = array('shippinginfo');
+        $contentdata['page'] = $this->load->view('page/shippinginfo', $pagedata, TRUE);
+
+        $this->templateLoader($contentdata);
+	}
 }

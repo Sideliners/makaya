@@ -1,7 +1,7 @@
 <div class="well well-small">
     <?php
     	foreach ( $springboards as $collection => $articles ) { 
-			echo "<h3>{$collection}</h4>";
+			echo "<h3>{$collection}</h3>";
 			echo "<div>";
 			echo '<ul class="inline">';
 			if ( $articles ) {
@@ -15,7 +15,6 @@
 				}
 				
 				echo "</ul>";
-				echo "<div>";
 			}
 			else {
 				echo "No Articles Here";

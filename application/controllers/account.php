@@ -99,7 +99,13 @@ class Account extends MY_Controller{
 					
 					if(is_object($check)){
 						// create sessions
-						$data = array('email' 	=> $params->inputEmail);
+						$email = $params->inputEmail;
+						$user = $this->mod_user->getUserDetails($email);
+						$data = array(
+									'email' 	=> $email,
+									'firstname'	=> $user->firstname,
+									'lastname'	=> $user->lastname
+									);
 						
 						$this->_create_session($data);
 						redirect(base_url());

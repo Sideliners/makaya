@@ -21,7 +21,7 @@
             <label class="control-label" for="user_name">Name</label>
             <div class="controls">
             	<?php if($this->session->userdata('email')): ?>
-                <label class="label label-success"><?=$this->session->userdata('user_name')?></label>
+                <label class="label label-success"><?=$this->session->userdata('firstname');?> <?=$this->session->userdata('lastname');?></label>
                 <?php else: ?>
             	<input type="text" id="user_name" name="user_name" placeholder="" tabindex="2" maxlength="30" value="<?php echo $this->input->post('user_name'); ?>" />
 				<?php endif; ?>

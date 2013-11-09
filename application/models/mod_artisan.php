@@ -67,4 +67,15 @@ class Mod_artisan extends CI_Model{
 		
 		return FALSE;
 	}
+	
+	function get_artisans() {
+		$this->db->cache_off();
+		$this->db->where('artisan_status', 1);
+		
+		$query = $this->db->get($this->artisan);		
+		if($query->num_rows() > 0)
+			return $query->result();
+		
+		return FALSE;
+	}	
 }

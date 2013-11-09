@@ -44,7 +44,7 @@ class Mod_user extends CI_Model{
 		$query = $this->db->get($this->user);
 		
 		if($query->num_rows() > 0) {
-			if($query->row()->password == $this->encrypt->sha1($password))
+			if($query->row()->user_password == $this->encrypt->sha1($password))
 				return TRUE;
 		}
 		

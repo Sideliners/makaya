@@ -269,11 +269,11 @@ class MY_Controller extends CI_Controller{
 					);
 		$carts = array(
 					'Shopping Cart' => site_url('shopping-cart'),
-					'Customer Support' => site_url('page/customer-support'),
-					'Feedback' => site_url('page/feedback'),
-					'Subscribe' => '',
-					'Share' => '',
-					'Support' => '',
+					'Customer Support' => site_url('customer-support'),
+					'Feedback' => site_url('feedback'),
+					'Subscribe' => '#',
+					'Share' => '#',
+					'Support' => site_url('donation-info'),
 					);
 		$collections = array(
 					'Browse Makaya Products' => '',

@@ -59,10 +59,14 @@ class Mod_product extends CI_Model{
 	
 	function get_product($product_id) {
 		$this->db->cache_off();
-		$this->db->where('product_id', $product_id);
-		$this->db->where('product_status', 1);
+		$this->db->select('*');
+		$this->db->from($this->product);
+		$this->db->join($this->product_album, "{$this->product_album}.product_id = {$this->product}.product_id");
+		$this->db->where("{$this->product}.product_status", 1);
+		$this->db->where("{$this->product_album}.is_primary", 1);
+		$this->db->where("{$this->product}.product_id", $product_id);
 		
-		$query = $this->db->get($this->product);		
+		$query = $this->db->get();
 		if($query->num_rows() > 0)
 			return $query->row();
 		

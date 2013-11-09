@@ -40,6 +40,6 @@
     </div>
     <span id="read_more"><a class="btn-link" role="button" onclick="show_details('product',<?=$highlights->product_id?>)">READ MORE</a></span>
 	<?php else: ?>
-        <h1>No Product to Display</h>
+        <h1>No Product to Display</h1>
 	<?php endif; ?>
 </div>
