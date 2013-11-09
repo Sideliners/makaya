@@ -8,9 +8,9 @@ class Article extends MY_Controller{
 	
 	public function index($collection_id=NULL, $article_id=NULL, $article_name=NULL){		
 		if (!$this->exists("article", $article_id, $article_name)) redirect(base_url());
-		
-		$article = $this->mod_article->get_article($article_id);		
-		
+
+		$article = $this->mod_article->get_article($article_id);
+
 		if ($article->article_type == "product") {
 			$object = $this->mod_article->get_article_product($article_id);
 		}

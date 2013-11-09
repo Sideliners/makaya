@@ -17,11 +17,11 @@ class Mod_article extends CI_Model{
 		$this->db->select("*");
 		$this->db->from($this->article);
 		$this->db->join($this->article_type, "{$this->article_type}.article_type_id = {$this->article}.article_type_id");
-		$this->db->join($this->user, "{$this->user}.user_id = {$this->article}.user_id");		
+		$this->db->join($this->user, "{$this->user}.user_id = {$this->article}.user_id");
 		$this->db->where("article_id", $article_id);
 		$this->db->where("article_status", 1);
-				
-		$query = $this->db->get();		
+		
+		$query = $this->db->get();
 		if($query->num_rows() > 0)
 			return $query->row();
 		

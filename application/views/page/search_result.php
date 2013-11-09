@@ -17,7 +17,7 @@
                     <div class="clearfix margin-top">
                     	<div class="pull-left"><button  name="add_to_cart" id="add_to_cart" class="btn btn-mini btn-primary add_to_cart" type="button" data-product-id="<?=intval($result->product_id);?>"><i class="icon-shopping-cart"></i> Add to cart</button>&nbsp;&nbsp;&nbsp;<span id="modal-msg-<?=intval($result->product_id);?>"></span></div>
                         
-                    	<div class="pull-right"><a  role="button" href="<?=site_url('product/'. $result->product_id . '/'. str_replace(' ', '-', strtolower($result->product_name)));?>">read more</a></div>
+                    	<div class="pull-right"><a  role="button" href="<?=site_url('product/'. $result->collection_id .'/' . $result->product_id . '/'. str_replace(' ', '-', strtolower($result->product_name)));?>">read more</a></div>
                     </div>
                 </div>
             </div>

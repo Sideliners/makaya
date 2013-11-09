@@ -53,7 +53,7 @@ class Mod_product extends CI_Model{
 		$query = $this->db->get();
 		if($query->num_rows() > 0)
 			return $query->row();
-		
+
 		return FALSE;
 	}
 	
@@ -111,17 +111,23 @@ class Mod_product extends CI_Model{
 	function search_products($str, $offset = NULL, $limit = NULL){
 		$this->db->cache_off();
 		$this->db->select('*');
-		$this->db->from($this->product);
+        $this->db->from($this->collection);
+        $this->db->join($this->collection_product, "{$this->collection_product}.collection_id = {$this->collection}.collection_id");
+        $this->db->join($this->product, "{$this->product}.product_id = {$this->collection_product}.product_id");
 		$this->db->join($this->product_album, "{$this->product_album}.product_id = {$this->product}.product_id");
+		$this->db->like('product_name', $str);
+		$this->db->where("{$this->collection}.collection_status", 1);
 		$this->db->where('product_status', 1);
 		$this->db->where('is_primary', 1);
-		$this->db->like('product_name', $str);
 		
 		if(!is_null($offset) && !is_null($limit)){
 			$this->db->limit($limit, $offset);
 		}
 		
-		$query = $this->db->get();		
-		return $query->result();
+        $query = $this->db->get();
+		if($query->num_rows() > 0)
+			return $query->result();
+		
+		return FALSE;
 	}
 }

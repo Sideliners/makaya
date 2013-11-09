@@ -14,7 +14,7 @@ class Mod_collection extends CI_Model{
 	private $product = 'product';
 	private $product_album = 'product_album';
 	
-	function get_collection_carousel($collection_id=NULL, $type=NULL, $id=NULL) {
+	function get_collection_carousel($collection_id=0, $type=NULL, $id=NULL) {
         $sql_query = "
             SELECT 
                 at.article_type as article_type, p.product_id as id, p.product_name as name, pa.product_image as image
@@ -88,7 +88,7 @@ class Mod_collection extends CI_Model{
 		return FALSE;
 	}
 
-    function get_collection_article_lists() {
+    function get_collection_article_lists($collection_id=0) {
 
         $sql_query = "
             SELECT 
@@ -103,7 +103,8 @@ class Mod_collection extends CI_Model{
 				c.collection_status = 1
 				AND a.article_status = 1
                 AND pa.is_primary = 1
-                AND p.product_status = 1			
+                AND p.product_status = 1
+                AND c.collection_id = {$collection_id}
 
             UNION ALL
 
@@ -120,6 +121,7 @@ class Mod_collection extends CI_Model{
 				AND a.article_status = 1
                 AND aa.is_primary = 1
                 AND ar.artisan_status = 1
+                AND c.collection_id = {$collection_id}
 
             UNION ALL
 
@@ -133,19 +135,20 @@ class Mod_collection extends CI_Model{
             JOIN {$this->article_type} AS at ON at.article_type_id = a.article_type_id
             WHERE 
                 c.collection_status = 1
-				AND a.article_status = 1
+			    AND a.article_status = 1
                 AND ea.is_primary = 1
                 AND e.enterprise_status = 1
+                AND c.collection_id = {$collection_id}
 			
 			ORDER BY
 				date_created, collection_name;
         ";
 
 		$this->db->cache_off();
-		$query = $this->db->query($sql_query);		
+		$query = $this->db->query($sql_query);
 		if($query->num_rows() > 0)
 			return $query->result();
-		
+
 		return FALSE;
     }
 		

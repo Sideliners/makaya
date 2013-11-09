@@ -58,34 +58,36 @@ class MY_Controller extends CI_Controller{
 	}
 	
 	private function pinterest_params($page, $collection_id, $id){
+
+        $media = "logo";
+        $description = "We are makaya";
 		if($page == 'product'){
 			$product = $this->get_product($collection_id, $id);
-			$pinterest_params = array(
-				'url' => current_url(),
-				'media' => $this->config->item('image_product_path').$product->product_image,
-				'description' => strip_tags($product->product_description)
-			);
+            if ($product) {
+                $media = $this->config->item('image_product_path').$product->product_image;
+                $description = strip_tags($product->product_description);
+            }
 		}
-		else{
-			$pinterest_params = array(
-				'url' => current_url(),
-				'media' => 'logo',
-				'description' => 'We are makaya'
-			);
-		}
+
+        $pinterest_params = array(
+            'url' => current_url(),
+            'media' => $media,
+            'description' => $description
+        );
 		
 		return $pinterest_params;
 	}
 	
 	private function twitter_params($page,$collection_id, $id){
+
+		$post = $this->config->item('sitename')." &mdash; We are makaya\n";
 		if($page == 'product'){
 			$product = $this->get_product($collection_id, $id);
-			$description = strip_tags($product->product_description);
+            if ($product) {
+    			$description = strip_tags($product->product_description);
+			    $post = "{$product->product_name} &mdash; {$description}\n";
+            }
 			
-			$post = "{$product->product_name} &mdash; {$description}\n";
-		}
-		else{
-			$post = $this->config->item('sitename')." &mdash; We are makaya\n";
 		}
 		
 		return $post;
@@ -93,25 +95,27 @@ class MY_Controller extends CI_Controller{
 	
 	private function meta_data($page, $collection_id, $id){
 		$meta = "<meta property='fb:app_id' content='176244019234035' />\n\t";
+        $meta.= "<meta property='og:url' content='".current_url()."' />\n\t";
+        $meta.= "<meta property='og:type' content='website' />\n\t";
+        $meta.= "<meta property='og:description' content='We Are makaya' />\n\t";
+        $meta.= "<meta property='og:title' content='".$this->config->item('sitename')."' />\n\t";
+        $meta.= "<meta property='og:image' content='logo' />\n\n";
+
 		
 		 if($page == 'product'){
 			$product = $this->get_product($collection_id, $id);
-			$image = $this->config->item('image_product_path').$product->product_image;
-			$description = strip_tags($product->product_description);
-			
-			$meta.= "<meta property='og:url' content='".current_url()."' />\n\t";
-			$meta.= "<meta property='og:type' content='website' />\n\t";
-			$meta.= "<meta property='og:description' content='".strip_tags($description)."' />\n\t";
-			$meta.= "<meta property='og:title' content='{$product->product_name}' />\n\t";
-			$meta.= "<meta property='og:image' content='{$image}' />\n\n";
+            if ($product) {
+                $image = $this->config->item('image_product_path').$product->product_image;
+                $description = strip_tags($product->product_description);
+                
+                $meta = "<meta property='fb:app_id' content='176244019234035' />\n\t";
+                $meta.= "<meta property='og:url' content='".current_url()."' />\n\t";
+                $meta.= "<meta property='og:type' content='website' />\n\t";
+                $meta.= "<meta property='og:description' content='".strip_tags($description)."' />\n\t";
+                $meta.= "<meta property='og:title' content='{$product->product_name}' />\n\t";
+                $meta.= "<meta property='og:image' content='{$image}' />\n\n";
+            }
         }
-		else{
-			$meta.= "<meta property='og:url' content='".current_url()."' />\n\t";
-			$meta.= "<meta property='og:type' content='website' />\n\t";
-			$meta.= "<meta property='og:description' content='We Are makaya' />\n\t";
-			$meta.= "<meta property='og:title' content='".$this->config->item('sitename')."' />\n\t";
-			//$meta.= "<meta property='og:image' content='logo' />\n\n";
-		}
 		
 		return $meta;
 	}
@@ -240,17 +244,23 @@ class MY_Controller extends CI_Controller{
 
 	function _get_springboards_list() {
 		$collections = array();
-		if ($collection_object = $this->mod_collection->get_collection_article_lists()) {
+		#if ($collection_object = $this->mod_collection->get_collection_article_lists()) {
+		if ($collection_object = $this->mod_collection->get_collection_list()) {
 			foreach ( $collection_object as $collection ) {
                 $name = $collection->collection_name;
-				$article = array (
-					"collection_id"	=>	$collection->collection_id, 
-                    "article_id"    =>	$collection->article_id,
-                    "url_title"  	=> 	$this->clean_string($collection->article_title),
-                    "title"      	=> 	$collection->article_title,
-                    "image_name" 	=> 	$collection->article_image
-                );
-				$collections[$name][$collection->article_id] = $article;
+                $articles = array ();
+                if ($collection_article = $this->mod_collection->get_collection_article_lists($collection->collection_id)) {
+                    foreach ($collection_article as $article) {
+                        $articles[$article->article_id] = array(
+                            "collection_id"	=>	$article->collection_id, 
+                            "article_id"    =>	$article->article_id,
+                            "url_title"  	=> 	$this->clean_string($article->article_title),
+                            "title"      	=> 	$article->article_title,
+                            "image_name" 	=> 	$article->article_image
+                        );
+                    }
+                }
+				$collections[$name] = $articles;
 			}
 		}
         

@@ -11,12 +11,14 @@ class Page extends MY_Controller{
 		$pagedata['page'] = 'Home';
 		
 		$product = $this->mod_product->get_highlighted_product();
-		$this->set_meta_params("product", $product->collection_id, $product->product_id);
-		$carouseldata['carousel'] = $this->_get_carousel_details('product', $product->collection_id, $product->product_id);
-		$pagedata['carousel'] = $this->load->view('partials/carousel', $carouseldata, TRUE);
+        if ($product) {
+		    $this->set_meta_params("product", $product->collection_id, $product->product_id);
+    		$carouseldata['carousel'] = $this->_get_carousel_details('product', $product->collection_id, $product->product_id);
+	    	$pagedata['carousel'] = $this->load->view('partials/carousel', $carouseldata, TRUE);
 		
-	    $highlightsdata['highlights'] = $this->_get_highlights_deck('product', $product->collection_id, $product->product_id);
-		$pagedata['highlights'] = $this->load->view('partials/highlights/product', $highlightsdata, TRUE);
+    	    $highlightsdata['highlights'] = $this->_get_highlights_deck('product', $product->collection_id, $product->product_id);
+	    	$pagedata['highlights'] = $this->load->view('partials/highlights/product', $highlightsdata, TRUE);
+        }
 		
 		$springboardsdata['springboards'] = $this->_get_springboards_list();
 		$pagedata['springboards'] = $this->load->view('partials/springboards', $springboardsdata, TRUE);
