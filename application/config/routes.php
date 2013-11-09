@@ -46,7 +46,9 @@ $route['page/terms-of-use'] = 'page/termsofuse';
 $route['page/legal-copyright'] = 'page/legalcopyright';
 
 $route['shopping-cart'] = 'cart';
-$route['page/customer-support'] = 'page/customersupport';
+$route['customer-support'] = 'support/customer';
+$route['donation-info'] = 'support/donation';
+$route['feedback']	=	'support/feedback';
 
 $route['product/(:num)/(:num)/(:any)'] = 'product/index/$1/$2/$3';
 $route['artisan/(:num)/(:num)/(:any)'] = 'artisan/index/$1/$2/$3';
