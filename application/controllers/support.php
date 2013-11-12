@@ -10,14 +10,31 @@ class Support extends MY_Controller{
         $pagedata['page_title'] = 'Donation Info';
 		$pagedata['page'] = 'Donation Info';
 		
-		$pagedata['artisans'] = $this->mod_artisan->get_artisans();
-		$pagedata['enterprises'] = $this->mod_enterprise->get_enterprises();
+		$recipients = $this->mod_artisan->get_donation_artisans();
+		$recipients = $this->mod_enterprise->get_donation_enterprises();
 		
-        $contentdata['script'] = array('donationinfo');
+		$pagedata['recipients'] = $recipients;
+		
+        $contentdata['script'] = array('admin');
         $contentdata['page'] = $this->load->view('page/donationinfo', $pagedata, TRUE);
 
         $this->templateLoader($contentdata);
     }
+	
+	public function get_recipients($type=NULL) {
+		if(!$this->input->is_ajax_request()) redirect(base_url());
+		if(is_null($type)) redirect(base_url());
+		
+		$status = 0;
+		$response = "";		
+		
+		if ($type == "artisan") { $response = $this->mod_artisan->get_donation_artisans(); }
+		if ($type == "enterprise") { $response = $this->mod_enterprise->get_donation_enterprises(); }
+		if ($response) { $status = 1; }
+		
+		$jsondata = array('status' => $status, 'response' => $response);
+		return json_encode($jsondata);
+	}
 	
 	public function customer(){
         $pagedata['page_title'] = 'Customer Support';

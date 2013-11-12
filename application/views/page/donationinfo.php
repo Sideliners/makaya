@@ -10,26 +10,22 @@
     
     <?php echo form_open('', $formAttr); ?>
 		<?php
-		$artisans_enterprises = "";
-        if ($artisans) {
-            foreach ($artisans as $artisan) {							
-                $artisans_enterprises .= "<option value='{$artisan->artisan_id}'>{$artisan->artisan_name}</option>";
+		$recipient_options = "";
+        if ($recipients) {
+            foreach ($recipients as $option) {							
+                $recipient_options .= "<option value='{$option->id}'>{$option->name}</option>";
             }
         }
-        if ($enterprises) {
-            foreach ($enterprises as $enterprise) {							
-                $artisans_enterprises .= "<option value='{$enterprise->enterprise_id}'>{$enterprise->enterprise_name}</option>";
-            }
-        }
-        ?>              
+        ?>
     
     	<h4>Artisan / Enterprise</h4>
     	<div class="control-group">
             <label class="control-label" for="artisan_enterprise">Artisan/Enterprise</label>
             <div class="controls">
-            	<select class="select2" autofocus tabindex="1">
+            	<select id="donation-recipient-type" class="select2" autofocus tabindex="1">
                 	<option value="0" selected> - Artisan/Enterprise - </option>
-      				<?=$artisans_enterprises?>
+                    <option value="artisan">Artisan</option>
+                    <option value="enterprise">Enterprise</option>
                 </select>
             </div>
         </div>
@@ -39,7 +35,7 @@
             <div class="controls">
             	<select class="select2" tabindex="2">
                 	<option value="0" selected> - Choose a Recipient - </option>
-      				<?=$artisans_enterprises?>
+      				<?=$recipient_options?>
                 </select>
             </div>
         </div>

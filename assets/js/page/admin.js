@@ -66,4 +66,19 @@ $(function(){
             }
         }, 'json');
     });
+	
+	$('body').on('change', '#donation-recipient-type', function(event){
+		donation_recipient_type = $("#donation-recipient-type").val();
+		if (donation_recipient_type != '0') {			
+			$.post(site_url + "support/get_recipients/" + donation_recipient_type, {				
+			}, function(data){
+				alert(data.status);
+				if(data.status > 0){
+					alert(data.response);
+				}
+			}, 'json');
+		} else {
+			alert("No Receipients");// remove options of conation recipients
+		}
+    });
 });

@@ -47,6 +47,9 @@ class Mod_product extends CI_Model{
 		$this->db->where("{$this->artisan}.artisan_status", 1);
 		$this->db->where("{$this->enterprise}.enterprise_status", 1);
 		$this->db->where("{$this->article}.article_status", 1);
+		$this->db->where("{$this->product_album}.is_primary", 1);
+		$this->db->where("{$this->artisan_album}.is_primary", 1);
+		$this->db->where("{$this->enterprise_album}.is_primary", 1);
 		$this->db->where("{$this->product}.product_id", $product_id);
 		$this->db->where("{$this->collection}.collection_id", $collection_id);
 				
@@ -115,7 +118,7 @@ class Mod_product extends CI_Model{
         $this->db->join($this->collection_product, "{$this->collection_product}.collection_id = {$this->collection}.collection_id");
         $this->db->join($this->product, "{$this->product}.product_id = {$this->collection_product}.product_id");
 		$this->db->join($this->product_album, "{$this->product_album}.product_id = {$this->product}.product_id");
-		$this->db->like('product_name', $str);
+		$this->db->like("{$this->product}.product_name", $str);
 		$this->db->where("{$this->collection}.collection_status", 1);
 		$this->db->where('product_status', 1);
 		$this->db->where('is_primary', 1);

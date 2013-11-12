@@ -18,6 +18,7 @@ class Search extends MY_Controller{
 		$url = base_url('search');
 		
 		$pagedata['search'] = $this->search_query($this->input->post('q'), $offset, $limit);
+		
 		$pagedata['img_path'] = $this->config->item('image_product_path');
 		
 		if($total > $limit){
@@ -31,8 +32,14 @@ class Search extends MY_Controller{
 	}
 	
 	private function search_query($str, $offset = NULL, $limit = NULL){
-		$search = $this->mod_product->search_products($str, $offset, $limit);
-		
-		if($search) return $search;
+		$search = $this->mod_product->search_products($str, $offset, $limit);		
+		if($search) {
+			$search_results = array();			
+			foreach ($search as $item) {
+				$search_results[$item->collection_name][$item->product_id] = $item;
+			}			
+			return $search_results;
+		}
+		return FALSE;
 	}
 }

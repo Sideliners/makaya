@@ -32,7 +32,10 @@ class Mod_artisan extends CI_Model{
 		$this->db->where("{$this->artisan}.artisan_status", 1);
 		$this->db->where("{$this->enterprise}.enterprise_status", 1);
 		$this->db->where("{$this->article}.article_status", 1);
-		$this->db->where("{$this->artisan}.artisan_id", $artisan_id);
+		$this->db->where("{$this->product_album}.is_primary", 1);
+		$this->db->where("{$this->artisan_album}.is_primary", 1);
+		$this->db->where("{$this->enterprise_album}.is_primary", 1);
+		$this->db->where("{$this->artisan}.artisan_id", $artisan_id);		
 		$this->db->where("{$this->collection}.collection_id", $collection_id);
 		
 		$query = $this->db->get();
@@ -77,5 +80,18 @@ class Mod_artisan extends CI_Model{
 			return $query->result();
 		
 		return FALSE;
-	}	
+	}
+	
+	function get_donation_artisans() {
+		$this->db->cache_off();
+		$this->db->select("artisan_id AS id, artisan_name AS name");
+        $this->db->from($this->artisan);		
+		$this->db->where('artisan_status', 1);
+		
+		$query = $this->db->get();		
+		if($query->num_rows() > 0)
+			return $query->result();
+		
+		return FALSE;
+	}
 }

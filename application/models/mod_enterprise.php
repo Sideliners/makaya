@@ -32,6 +32,9 @@ class Mod_enterprise extends CI_Model{
 		$this->db->where("{$this->artisan}.artisan_status", 1);
 		$this->db->where("{$this->enterprise}.enterprise_status", 1);
 		$this->db->where("{$this->article}.article_status", 1);
+		$this->db->where("{$this->product_album}.is_primary", 1);
+		$this->db->where("{$this->artisan_album}.is_primary", 1);
+		$this->db->where("{$this->enterprise_album}.is_primary", 1);
 		$this->db->where("{$this->enterprise}.enterprise_id", $enterprise_id);
 		$this->db->where("{$this->collection}.collection_id", $collection_id);
 		
@@ -73,6 +76,19 @@ class Mod_enterprise extends CI_Model{
 		$this->db->where('enterprise_status', 1);
 				
 		$query = $this->db->get($this->enterprise);		
+		if($query->num_rows() > 0)
+			return $query->result();
+		
+		return FALSE;
+	}
+	
+	function get_donation_enterprises() {
+		$this->db->cache_off();
+		$this->db->select("enterprise_id AS id, enterprise_name AS name");
+        $this->db->from($this->enterprise);		
+		$this->db->where('enterprise_status', 1);
+		
+		$query = $this->db->get();		
 		if($query->num_rows() > 0)
 			return $query->result();
 		
