@@ -27,3 +27,8 @@ if (defined('ENVIRONMENT'))
 	}
 }
 
+# Email Config
+
+$config['admin_email'] = "info@wearemakaya.com";
+$config['admin_email_name'] = "Makaya Asia";
+$config['alt_message'] = "This is an alternative Message";

@@ -232,7 +232,7 @@ class MY_Controller extends CI_Controller{
 		else if ($type == "enterprise") {
 			$highlights = $this->mod_enterprise->get_enterprise_details($collection_id, $id);
 		}
-		
+
 		if (!isset($highlights) || empty($highlights)) return NULL;
 
 		$highlights->clean_pname = ($pname = $highlights->product_name) ? $this->clean_string($pname) : "#";
@@ -346,4 +346,36 @@ class MY_Controller extends CI_Controller{
 			return FALSE;
 		}
 	}
+
+    function send_email($customer=NULL, $customer_name=NULL, $subject=NULL, $message=NULL, $recipient_is_admin=0) {
+
+        $this->load->library('email');
+
+        $admin         = $this->config->item("admin_email");
+        $admin_name    = $this->config->item("admin_email_name");
+        $alt_message    = $this->config->item("alt_message");
+
+        if (is_null($customer) && is_null($customer_name) && is_null($subject) && is_null($message))
+            return 0;
+
+        $this->email->clear();
+
+        $this->email->to($customer);
+        $this->email->from($admin, $admin_name);
+
+        if ($recipient_is_admin) {
+            $this->email->to($admin);
+            $this->email->from($customer, $customer_name);
+            $this->email->reply_to($customer, $customer_name);
+        }
+
+        $this->email->subject($subject);
+        $this->email->message($message);
+        $this->email->set_alt_message($alt_message);
+
+        if ($this->email->send()) return 1;
+
+        error_log($this->email->print_debugger());
+        return 0;
+    }
 }

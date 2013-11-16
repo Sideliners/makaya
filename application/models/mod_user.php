@@ -30,7 +30,6 @@ class Mod_user extends CI_Model{
 		return $this->db->insert_id();
 	}
 	
-	
 	function update_user($id, $data){
 		$this->db->where('user_id', $id);
 		
@@ -63,5 +62,20 @@ class Mod_user extends CI_Model{
 		return FALSE;
 	}
 	
+    function check_activation($activation_code=NULL){
+        if (is_null($activation_code)) return 0;
+
+		$this->db->where('activation_code', $activation_code);
+		$this->db->where('user_type', 4);
+		$this->db->where('user_status', 0);
+
+		$this->db->cache_off();
+		$query = $this->db->get($this->user);
+
+		if($query->num_rows() > 0)
+			return $query->row();
+		
+		return FALSE;
+    }
 	
 }

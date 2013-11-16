@@ -62,11 +62,11 @@ class Support extends MY_Controller{
 					$name = $params->user_name;
 				}
 				if ($name) $name .= " " . $this->session->userdata('lastname');
-				
-				$data = array('email' => $email, 'name' => $name, 'message' => $params->message);
-				
-				if (1) {
+                $subject = "[INQUIRY] Customer Support";
+                
+				if ($this->send_email($email, $name, $subject, $params->message, 1)) {
 					$pagedata['success_msg'] = '<strong>Your message has been sent!</strong> Please wait for our reply.';
+					unset($_POST);
 				}
 				else{
 					$pagedata['error_msg'] = 'An error occured, Please try again later';

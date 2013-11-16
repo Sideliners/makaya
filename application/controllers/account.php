@@ -48,19 +48,31 @@ class Account extends MY_Controller{
 							$pagedata['error_msg'] = 'Email address already used';
 						}
 						else{
+
+                            $activation_code = $this->encrypt->sha1($params->inputEmail);
 							$userdata = array(
 								'user_email' => $params->inputEmail,
 								'user_password' => $this->encrypt->sha1($params->inputPassword),
 								'firstname' => $params->f_name,
 								'lastname' => $params->l_name,
 								'user_type' => 4,
+                                'activation_code' => $activation_code,
 								'date_created' => date($this->config->item('datetime'))
 							);
 							
-							if($this->mod_user->create_user($userdata)){
+							if($id = $this->mod_user->create_user($userdata)){
 								// send an email confirmation to be added later...
-								$pagedata['success_msg'] = '<strong>Congratulations!</strong> Account has been created.<br />We\'ve sent you an Email Confirmation.';
-								unset($_POST);
+
+                                $subject = "[REGISTRATION] Account Verification";
+                                $message = "Please verify your registration by clicking here: <br/> " . site_url("account/verify/{$activation_code}");
+                                if ($this->send_email($params->inputEmail, "{$params->f_name} {$params->l_name}", $subject, $message)) {
+                                    $pagedata['success_msg'] = '<strong>Congratulations!</strong> Account has been created.<br />We\'ve sent you an Email Confirmation.';
+                                    unset($_POST);
+                                }
+                                else{
+                                    $pagedata['error_msg'] = 'An error occured, Please try again later';
+                                }
+
 							}
 							else{
 								$pagedata['error_msg'] = 'An error occured, Please try again later';
@@ -157,6 +169,7 @@ class Account extends MY_Controller{
 				
 				if($this->mod_user->update_user($user->user_id, $userdata)){
 					$pagedata['success_msg'] = '<strong>Congratulations!</strong> Your account has been updated.';
+                    unset($_POST);
 				}
 				else{
 					$pagedata['error_msg'] = 'An error occured, Please try again later';
@@ -259,4 +272,31 @@ class Account extends MY_Controller{
 			redirect(base_url());
 		}
 	}
+
+    function verify($activation_code) {
+        $activated = 0;
+        if ($user = $this->mod_user->check_activation($activation_code)) {
+            $data = array('user_status' => 1);
+            if ($this->mod_user->update_user($user->user_id, $data)) {
+                $detail = $this->mod_user->getUserDetails($user->user_email);
+                $data = array(
+                            'email' 	=> $detail->user_email,
+                            'firstname'	=> $detail->firstname,
+                            'lastname'	=> $detail->lastname
+                            );
+
+                $this->_create_session($data);
+                redirect(base_url());
+            }
+        }
+
+		$pagedata['page_title'] = 'About Us';
+        $pagedata['page'] = 'About Us';
+        $pagedata['content'] = "Invalid Page";
+
+        $contentdata['script'] = array('aboutus');
+        $contentdata['page'] = $this->load->view('page/verify', $pagedata, TRUE);
+
+        $this->templateLoader($contentdata);
+    }
 }
