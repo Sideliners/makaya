@@ -77,5 +77,25 @@ class Page extends MY_Controller{
         $contentdata['page'] = $this->load->view('page/legalcopyright', $pagedata, TRUE);
 
         $this->templateLoader($contentdata);
-	}	
+	}
+	
+	public function thankyou(){
+		$pagedata['page_title'] = 'Thank you for Purchasing';
+		$pagedata['page'] = 'Thank you for Purchasing';		
+
+        $contentdata['script'] = NULL;
+        $contentdata['page'] = $this->load->view('page/thankyou', $pagedata, TRUE);
+
+        $this->templateLoader($contentdata);
+	}
+	
+	public function cancelled_purchase(){
+		$pagedata['page_title'] = 'Purchase Cancelled';
+		$pagedata['page'] = 'Purchase Cancelled';		
+
+        $contentdata['script'] = NULL;
+        $contentdata['page'] = $this->load->view('page/cancel_purchase', $pagedata, TRUE);
+
+        $this->templateLoader($contentdata);
+	}
 }

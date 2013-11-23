@@ -1,13 +1,27 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Cart extends MY_Controller{
+	
+	private $api_username;
+	private $api_password;
+	private $api_signature;
 
     public function __construct(){
         parent::__construct();
+		
 		$this->load->helper('cookie');
 	}
 
     public function index(){
+		$this->load->library('merchant');
+		$this->load->config('merchant');
+		
+		$this->merchant->load('paypal_express');
+		
+		$this->api_username = $this->config->item('sb_username');
+		$this->api_password = $this->config->item('sb_password');
+		$this->api_signature = $this->config->item('sb_signature');
+		
         //$this->cart->destroy();
         $pagedata['page_title'] = 'Shopping Cart';
 		$pagedata['page'] = 'Shopping Cart';
@@ -22,6 +36,36 @@ class Cart extends MY_Controller{
         
         $pagedata['imgpath'] = $img_path;
 		$pagedata['orders'] = $orders;
+		
+		if(isset($_POST['paypal_checkout'])){
+			//$settings = $this->merchant->default_settings();
+			$settings = array(
+				'username' => $this->api_username,
+				'password' => $this->api_password,
+				'signature' => $this->api_signature,
+				'test_mode' => TRUE
+			);
+			
+			$this->merchant->initialize($settings);
+			
+			$params = array(
+				'amount' => $this->cart->total(),
+				'currency' => 'SGD',
+				'return_url' => site_url('thankyou'),
+				'cancel_url' => site_url('cancelled'),
+				'items' => array(
+					'item_name' => $this->input->post('item_name'),
+					'item_qty' => $this->input->post('qty'),
+					'item_price' => $this->input->post('item_price')
+				)
+			);
+			
+			$response = $this->merchant->purchase($params);
+			
+			echo '<pre>';
+			print_r($response);
+			exit;
+		}
 
         $contentdata['script'] = array('shoppingcart');
         $contentdata['page'] = $this->load->view('page/shoppingcart', $pagedata, TRUE);

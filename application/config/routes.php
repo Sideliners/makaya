@@ -59,5 +59,8 @@ $route['collection/(:num)/(:any)'] = 'collection/index/$1/$2';
 
 $route['search/(:any)'] = 'search/index/$1';
 
+$route['thankyou'] = 'page/thankyou';
+$route['cancelled'] = 'page/cancelled_purchase';
+
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */

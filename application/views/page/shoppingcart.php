@@ -2,7 +2,8 @@
 	<h3><?=$page_title;?><span class="pull-right"><small style="font-size: 10px;"><strong>Important</strong> : Cookies must be enabled to your browser</small></span></h3>
     
     <?php if ($orders): ?>
-	<table class="table table-bordered table-condensed">
+    <?php echo form_open('', array('class' => '', 'id' => 'cart_form')); ?>
+	<table class="table table-bordered table-condensed" style="background-color: #FFF !important;">
         <thead>
             <tr>
                 <th>Image</th>
@@ -16,13 +17,19 @@
             <?php foreach($orders as $item): ?>
             <tr>
                 <td><img src="<?=$imgpath.$item['image'];?>" style="max-width: 64px;" /></td>
-                <td><?=$item['name'];?>&nbsp;&nbsp;<small><a data-item-id="<?=$item['rowid'];?>" class="remove-item btn-link" role="button" data-toggle="tooltip" data-original-title="remove" data-placement="top" onmouseover="$(this).tooltip('show')"><i class="icon-remove"></i></a></small></td>
-                <td><center>$ <?=$item['price'];?></center></td>
+                <td>
+					<?=$item['name'];?>&nbsp;&nbsp;
+                    <small>
+                    	<a data-item-id="<?=$item['rowid'];?>" class="remove-item btn-link" role="button" data-toggle="tooltip" data-original-title="remove" data-placement="top" onmouseover="$(this).tooltip('show')"><i class="icon-remove"></i></a>
+                    </small>
+                    <input type="hidden" name="item_name[]" value="<?=$item['name'];?>" />
+                 </td>
+                <td><center>$ <?=$item['price'];?><input type="hidden" name="item_price[]" value="<?=$item['price'];?>" /></center></td>
                 <td>
                     <center>
                         <div class="input-append" id="update-qty-<?=$item['rowid']?>">
                             <input type="number" name="qty[]" value="<?=$item['qty'];?>" class="item-qty input-mini item-qty text-center" />
-                            <button id="<?=$item['rowid']?>" class="btn update-qty" role="button"><i class="icon-refresh"></i></button>
+                            <button id="<?=$item['rowid']?>" class="btn update-qty" role="button" type="button"><i class="icon-refresh"></i></button>
                         </div>
                     </center>
                 </td>
@@ -44,10 +51,11 @@
         </div>
 
         <div class="pull-right">
-            <a href="javascript:alert('Paypal Payment')" class="btn btn-warning">Checkout via Paypal</a>
-            <a href="<?=site_url('cart/checkout')?>" class="btn btn-info">Checkout</a>
+            <button type="submit" name="paypal_checkout" class="btn btn-warning">Checkout via Paypal</button>
+            <button type="submit" name="checkout" class="btn btn-info">Checkout</button>
         </div>
     </div>
+    <?php echo form_close(); ?>
     <?php else: ?>
     	0 items in your Cart
     <?php endif; ?>
