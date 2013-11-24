@@ -1,3 +1,4 @@
+<?php $total = 0; ?>
 <div class="well well-small">
     <?php if(!isset($response)): ?>
     <h2 class="alert alert-success"><?=$page;?></h2>
@@ -21,17 +22,18 @@
                     <tr>
                         <td><?=$item->product_name;?></td>
                         <td><?=$item->item_qty;?></td>
-                        <td><?=$item->price;?></td>
+                        <td>$ <?=$item->price;?></td>
                     </tr>
-                    <?php endforeach; ?>
+                    <?php $total += (float)$item->total_price; endforeach; ?>
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="2"><h4>Total</h4></td>
-                        <td><center><h5><?=$item->total_price;?></h5></center></td>
+                        <td><center><h5>$ <?php echo $total;?></h5></center></td>
                     </tr>
                 </tfoot>
             </table>
         </div> <!-- table -->
+        <p><a href="<?=site_url();?>" class="btn btn-link">Back to Home</a></p>
     </div>
 </div>
