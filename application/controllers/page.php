@@ -80,8 +80,44 @@ class Page extends MY_Controller{
 	}
 	
 	public function thankyou(){
+        $this->load->model('mod_cart');
+
+        $img_path = $this->config->item('image_product_path');
+        $save = 0;
+
 		$pagedata['page_title'] = 'Thank you for Purchasing';
-		$pagedata['page'] = 'Thank you for Purchasing';		
+        $pagedata['imgpath'] = $img_path;
+
+        $orders = $this->cart->contents();
+
+        if(!empty($orders)){
+            $data = array(
+                'transaction_id' => $this->input->get('token'),
+                'payer_id' => $this->input->get('PayerID')
+            );
+
+            foreach($orders as $key => $val){
+                $prod_id = explode("_", $val['id']);
+
+                $data['product_id']  = $prod_id[2];
+                $data['item_qty']    = $val['qty'];
+                $data['total_price'] = $val['subtotal'];
+
+                $save += $this->mod_cart->save_transaction($data);
+            }
+
+            if($save > 0){
+                $this->cart->destroy();
+            }
+            else{
+                $pagedata['response'] = '<p>Something went wrong, Please contact our support.</p>';
+            }
+        }
+
+        $pagedata['page'] = 'Thank you for Purchasing';		
+        $orders = $this->mod_cart->get_transactions($this->input->get('PayerID'), $this->input->get('token'));
+
+        $pagedata['orders'] = $orders;
 
         $contentdata['script'] = NULL;
         $contentdata['page'] = $this->load->view('page/thankyou', $pagedata, TRUE);

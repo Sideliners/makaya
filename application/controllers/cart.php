@@ -22,7 +22,6 @@ class Cart extends MY_Controller{
 		$this->api_password = $this->config->item('sb_password');
 		$this->api_signature = $this->config->item('sb_signature');
 		
-        //$this->cart->destroy();
         $pagedata['page_title'] = 'Shopping Cart';
 		$pagedata['page'] = 'Shopping Cart';
 

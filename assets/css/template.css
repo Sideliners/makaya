@@ -108,3 +108,5 @@ div.center-cropped {
 }
 
 .album-li{ margin-left: 20px !important; }
+
+.trans-history tbody tr td{ text-align: center; }
