@@ -269,15 +269,14 @@ class MY_Controller extends CI_Controller{
 
 	private function get_backbone_list() {
 		/* Returns a list of Backbone Link Pages */
+		$pageList = $this->mod_page->get();
 
 		$pages = array(
-					'About Us' => site_url('page/about-us'),
-					'Acknowledgements' => site_url('page/acknowledgements'),
-					'Partners' => site_url('page/partners'),
-					'Terms Of Use' => site_url('page/terms-of-use'),
-					'Legal Copyright' => site_url('page/legal-copyright')
-					);
-		$carts = array(
+			'pages' => $pageList
+		);
+		
+		return $pages;
+/*		$carts = array(
 					'Shopping Cart' => site_url('shopping-cart'),
 					'Customer Support' => site_url('customer-support'),
 					'Feedback' => site_url('feedback'),
@@ -302,7 +301,7 @@ class MY_Controller extends CI_Controller{
 				'left' => $pages,
 				'center' => $carts,
 				'right' => $collections,
-				);
+				);*/
 	}
 
 	function clean_string($string) {

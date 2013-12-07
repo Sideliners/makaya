@@ -127,10 +127,24 @@ class Page extends MY_Controller{
 	
 	public function cancelled_purchase(){
 		$pagedata['page_title'] = 'Purchase Cancelled';
-		$pagedata['page'] = 'Purchase Cancelled';		
+		$pagedata['page'] = 'Purchase Cancelled';
 
         $contentdata['script'] = NULL;
         $contentdata['page'] = $this->load->view('page/cancel_purchase', $pagedata, TRUE);
+
+        $this->templateLoader($contentdata);
+	}
+	
+	public function view($page){
+		$page = trim($page);
+		
+		$body = $this->mod_page->getBody($page);
+		
+		$pagedata['page_title'] = $body->page_name;
+		$pagedata['page'] = $body->page_body;
+
+        $contentdata['script'] = NULL;
+        $contentdata['page'] = $this->load->view('page/page', $pagedata, TRUE);
 
         $this->templateLoader($contentdata);
 	}

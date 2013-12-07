@@ -41,9 +41,9 @@
 $route['default_controller'] = "page";
 $route['404_override'] = '';
 
-$route['page/about-us'] = 'page/aboutus';
-$route['page/terms-of-use'] = 'page/termsofuse';
-$route['page/legal-copyright'] = 'page/legalcopyright';
+$route['(:any)'] = 'page/view/$1';
+//$route['page/terms-of-use'] = 'page/termsofuse';
+//$route['page/legal-copyright'] = 'page/legalcopyright';
 
 $route['shopping-cart'] = 'cart';
 $route['customer-support'] = 'support/customer';
