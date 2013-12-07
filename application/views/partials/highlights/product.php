@@ -12,7 +12,7 @@
         	<div id="artisan">
                 <p class="text-center">
                     <a href="<?=site_url('artisan/'.$highlights->collection_id.'/'.$highlights->artisan_id.'/'.$highlights->clean_aname);?>" class="thumbnail background-white" title="<?=$highlights->artisan_name;?>">
-                        <img src="<?=$this->config->item('image_artisan_path').$highlights->artisan_image;?>" alt="<?=$highlights->artisan_name;?>" title="<?=$highlights->artisan_name;?>" />
+                        <img src="<?=$this->config->item('image_artisan_path').$highlights->artisan_image;?>"  style="max-width: 300px;" alt="<?=$highlights->artisan_name;?>" title="<?=$highlights->artisan_name;?>" />
                         <strong><?=$highlights->artisan_name;?></strong>
                     </a>
                 </p>
@@ -20,7 +20,7 @@
             <div id="enterprise">
                 <p class="text-center">
                     <a href="<?=site_url('enterprise/'.$highlights->collection_id.'/'.$highlights->enterprise_id.'/'.$highlights->clean_ename);?>" class="thumbnail background-white" title="<?=$highlights->enterprise_name;?>">
-                        <img src="<?=$this->config->item('image_enterprise_path').$highlights->enterprise_image;?>" alt="<?=$highlights->enterprise_name;?>" title="<?=$highlights->enterprise_name;?>" />
+                        <img src="<?=$this->config->item('image_enterprise_path').$highlights->enterprise_image;?>"  style="max-width: 300px;" alt="<?=$highlights->enterprise_name;?>" title="<?=$highlights->enterprise_name;?>" />
                         <strong><?=$highlights->enterprise_name;?></strong>
                     </a>
                 </p>
