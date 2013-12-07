@@ -41,7 +41,7 @@
 $route['default_controller'] = "page";
 $route['404_override'] = '';
 
-$route['(:any)'] = 'page/view/$1';
+$route['page/(:any)'] = 'page/view/$1';
 //$route['page/terms-of-use'] = 'page/termsofuse';
 //$route['page/legal-copyright'] = 'page/legalcopyright';
 

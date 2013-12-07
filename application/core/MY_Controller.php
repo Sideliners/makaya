@@ -272,36 +272,29 @@ class MY_Controller extends CI_Controller{
 		$pageList = $this->mod_page->get();
 
 		$pages = array(
-			'pages' => $pageList
-		);
-		
-		return $pages;
-/*		$carts = array(
+			'pages' => $pageList,
+			'statics' => array(
 					'Shopping Cart' => site_url('shopping-cart'),
 					'Customer Support' => site_url('customer-support'),
 					'Feedback' => site_url('feedback'),
 					'Subscribe' => '#',
 					'Share' => '#',
 					'Support' => site_url('donation-info'),
-					);
-		$collections = array(
-					'Browse Makaya Products' => '',
-					);
-
+			),
+			'collections' => array()
+		);
+		
 		if ($collection_object = $this->mod_collection->get_collection_list()) {
 			foreach ( $collection_object as $collection ) {
 				$id = $collection->collection_id;
 				$name = $this->clean_string($collection->collection_name);
 				$uri = site_url("collection/{$id}/{$name}");
-				$collections[$collection->collection_name] = $uri;
+				
+				$pages['collections'][$collection->collection_name] = $uri;
 			}
 		}
-
-		return array(
-				'left' => $pages,
-				'center' => $carts,
-				'right' => $collections,
-				);*/
+		
+		return $pages;
 	}
 
 	function clean_string($string) {
