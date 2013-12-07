@@ -34,7 +34,7 @@ abstract class Merchant_paypal_base extends Merchant_driver
 {
 	//const PROCESS_URL = 'https://api.paypal.com/nvp';
 	const PROCESS_URL = 'https://api-3t.paypal.com/nvp';
-	const PROCESS_URL_TEST = 'https://api.sandbox.paypal.com/nvp';
+	const PROCESS_URL_TEST = 'https://api-3t.sandbox.paypal.com/nvp';
 	//const CHECKOUT_URL = 'https://api-3t.paypal.com/nvp';
 	//const CHECKOUT_URL_TEST = 'https://api-3t.sandbox.paypal.com/nvp';
 	const CHECKOUT_URL = 'https://www.paypal.com/webscr';

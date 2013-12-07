@@ -726,7 +726,7 @@ abstract class Merchant_driver
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-		curl_setopt($ch, CURLOPT_CAINFO, MERCHANT_CONFIG_PATH.'/paypal_cert.p12');
+		curl_setopt($ch, CURLOPT_CAINFO, MERCHANT_CONFIG_PATH.'/cacert.pem');
 
 		if ($username !== NULL)
 		{

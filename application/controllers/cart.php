@@ -18,9 +18,9 @@ class Cart extends MY_Controller{
 		
 		$this->merchant->load('paypal_express');
 		
-		$this->api_username = $this->config->item('username');
-		$this->api_password = $this->config->item('password');
-		$this->api_signature = $this->config->item('signature');
+		$this->api_username = $this->config->item('sb_username');
+		$this->api_password = $this->config->item('sb_password');
+		$this->api_signature = $this->config->item('sb_signature');
 		
         $pagedata['page_title'] = 'Shopping Cart';
 		$pagedata['page'] = 'Shopping Cart';
@@ -41,8 +41,8 @@ class Cart extends MY_Controller{
 			$settings = array(
 				'username' => $this->api_username,
 				'password' => $this->api_password,
-				//'signature' => $this->api_signature,
-				//'test_mode' => TRUE
+				'signature' => $this->api_signature,
+				'test_mode' => TRUE
 			);
 			
 			$this->merchant->initialize($settings);
